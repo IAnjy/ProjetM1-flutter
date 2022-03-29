@@ -1,3 +1,4 @@
+import 'package:biblio/home.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,7 +15,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Gestion bibliothécaire',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.brown,
+        // primarySwatch: Color(hexColor('#AE8559')),
       ),
       home: const MyHomePage(title: 'Biblio'),
     );
@@ -30,46 +32,28 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          // title: Text(widget.title),
-          backgroundColor: Colors.white,
-          centerTitle: true,
-          title: Image.asset(
-            "assets/LogoT.png",
-            width: 140,
-            height: 140,
-            alignment: Alignment.center,
-          ),
+      appBar: AppBar(
+        backgroundColor: Colors.grey[300],
+        // backgroundColor: Colors.white,
+        centerTitle: true,
+        elevation: 0,
+        title: Image.asset(
+          "assets/LogoT.png",
+          width: 140,
+          height: 140,
+          alignment: Alignment.center,
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Text(
-                'You have pushed the button this many times:',
-              ),
-              Text(
-                '$_counter',
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ],
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _incrementCounter,
-          tooltip: 'Increment',
-          child: const Icon(Icons.add),
-        ));
+      ),
+      // ignore: prefer_const_constructors
+      body: Home(),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: _incrementCounter,
+      //   tooltip: 'Increment',
+      //   child: const Icon(Icons.add),
+      // )
+    );
   }
 }
