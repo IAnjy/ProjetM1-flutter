@@ -1,6 +1,11 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, deprecated_member_use
 
-import 'package:biblio/home.dart';
+import 'package:biblio/models/lecteurModel.dart';
+import 'package:biblio/ui/home.dart';
+import 'package:biblio/ui/livre/livre.dart';
+import 'package:biblio/ui/pret/pret.dart';
+import 'package:biblio/ui/shared/appBarWidget.dart';
+import 'package:biblio/ui/shared/search.dart';
 import 'package:flutter/material.dart';
 
 class Lecteur extends StatefulWidget {
@@ -13,58 +18,113 @@ class Lecteur extends StatefulWidget {
 class _LecteurState extends State<Lecteur> {
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-        length: 3,
-        child: Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.pink[100],
-              // backgroundColor: Colors.white,
-              centerTitle: true,
-              elevation: 0,
-              title: Image.asset(
-                "assets/LogoT.png",
-                width: 160,
-                height: 140,
-                alignment: Alignment.center,
-              ),
-              bottom: TabBar(
-                labelColor: Colors.black87,
-                indicatorWeight: 3,
-                tabs: [
-                  // Tab(
-                  //   icon: Icon(Icons.home),
-                  //   text: 'Accueil',
-                  // ),
-                  Tab(
-                    icon: Icon(Icons.face),
-                    text: 'Lecteur',
-                  ),
-                  Tab(
-                    icon: Icon(Icons.book),
-                    text: 'Livre',
-                  ),
-                  Tab(
-                    icon: Icon(Icons.bookmark_add),
-                    text: 'Prêt',
-                  ),
-                ],
-              ),
-            ),
-            body: TabBarView(
-              children: [
-                buildPage('Lecteur'),
-                buildPage('Livre'),
-                buildPage('Pret'),
-              ],
-            )));
-  }
+    var listLecteur = <LecteurModel>[
+      LecteurModel(1, "ANDRIAHERTSE", "Ianjy Martial"),
+      LecteurModel(2, "RAKOTOARISOA", "Elisabeth Angeline"),
+      LecteurModel(3, "RANDRIAHERTSE", "Martial"),
+      LecteurModel(4, "ANDRIHERTSE", "Ilazasoa Martial"),
+      LecteurModel(5, "ANDIAHERTSE", "Fiderana Martial"),
+      LecteurModel(6, "Ousmane", "Dembele"),
+      LecteurModel(1, "ANDRIAHERTSE", "Ianjy Martial"),
+      LecteurModel(2, "RAKOTOARISOA", "Elisabeth Angeline"),
+      LecteurModel(3, "RANDRIAHERTSE", "Martial"),
+      LecteurModel(4, "ANDRIHERTSE", "Ilazasoa Martial"),
+      LecteurModel(5, "ANDIAHERTSE", "Fiderana Martial"),
+      LecteurModel(6, "Ousmane", "Dembele"),
+    ];
 
-  buildPage(String text) {
-    return Center(
-      child: Text(
-        text,
-        style: TextStyle(fontSize: 14),
+    return Scaffold(
+      appBar: ReusableWidgets.getAppBar("LECTEUR", context),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(0xFFAE8559),
+        onPressed: () {},
+        child: const Icon(Icons.add),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SearchTextField(),
+          ),
+          Expanded(
+            child: ListView.builder(
+                itemCount: listLecteur.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.brown[100],
+                        radius: 23,
+                        child: Text("${listLecteur[index].numLecteur}"),
+                      ),
+                      title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              // mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(listLecteur[index]
+                                    .nomLecteur
+                                    .toUpperCase()),
+                                Text(listLecteur[index].prenomLecteur),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.edit,
+                                      size: 20,
+                                    )),
+                                IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.delete,
+                                      size: 20,
+                                    )),
+                              ],
+                            )
+                          ]),
+                    ),
+                  );
+                }),
+          ),
+        ],
       ),
     );
+
+    // return Column(
+    //   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //   children: [
+    //     Padding(
+    //       padding: const EdgeInsets.all(12.0),
+    //       child: SearchTextField(),
+    //     ),
+    //     Center(
+    //       child: Text("lecteur(s) :"),
+    //     ),
+    //     SingleChildScrollView(
+    //         child: ListView.builder(
+    //             itemCount: 2,
+    //             itemBuilder: (context, index) {
+    //               return ListTile(
+    //                 title: Text("Element numéro $index"),
+    //               );
+    //             }))
+    //   ],
+    // );
   }
+
+  // Widget searchTextFieldView() {
+  //   return Container(
+  //       child: TextField(
+  //     decoration: InputDecoration(
+  //         hintText: "Rechercher...",
+  //         prefixIcon: Icon(Icons.search),
+  //         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+  //         contentPadding: EdgeInsets.all(8)),
+  //     onChanged: (value) {},
+  //   ));
+  // }
 }
