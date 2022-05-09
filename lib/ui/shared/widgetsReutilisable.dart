@@ -61,4 +61,12 @@ class ReusableWidgets {
       ],
     );
   }
+
+  static getSearchTextFieldDecoration() {
+    return InputDecoration(
+        hintText: "Rechercher...",
+        prefixIcon: Icon(Icons.search),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        contentPadding: EdgeInsets.all(8));
+  }
 }
