@@ -64,9 +64,9 @@ class ReusableWidgets {
 
   static getSearchTextFieldDecoration() {
     return InputDecoration(
-        hintText: "Rechercher...",
+        hintText: "Appuyez pour rechercher...",
         prefixIcon: Icon(Icons.search),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(50)),
         contentPadding: EdgeInsets.all(8));
   }
 }

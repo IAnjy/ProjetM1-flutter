@@ -8,7 +8,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,7 +18,6 @@ class MyApp extends StatelessWidget {
         // primarySwatch: Color(hexColor('#AE8559')),
       ),
       home: const Home(),
-      // home: const MyHomePage(title: 'Biblio'),
     );
   }
 }

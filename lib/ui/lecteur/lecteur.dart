@@ -1,12 +1,15 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, deprecated_member_use
 
+import 'dart:convert';
+
+// import 'package:biblio/api/my_api.dart';
+import 'package:biblio/http-services/lecteur-api.dart';
 import 'package:biblio/models/lecteurModel.dart';
-import 'package:biblio/ui/home.dart';
 import 'package:biblio/ui/lecteur/components/lecteur_card.dart';
-import 'package:biblio/ui/livre/livre.dart';
-import 'package:biblio/ui/pret/pret.dart';
+import 'package:biblio/ui/lecteur/components/lecteur_search.dart';
 import 'package:biblio/ui/shared/widgetsReutilisable.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class Lecteur extends StatefulWidget {
   const Lecteur({Key? key}) : super(key: key);
@@ -16,33 +19,35 @@ class Lecteur extends StatefulWidget {
 }
 
 class _LecteurState extends State<Lecteur> {
-  static List<LecteurModel> listLecteur = [
-    LecteurModel(1, "ANDRIAHERTSE", "Ianjy Martial"),
-    LecteurModel(2, "RAKOTOARISOA", "Elisabeth Angeline"),
-    LecteurModel(3, "RANDRIAHERTSE", "Martial"),
-    LecteurModel(4, "ANDRIHERTSE", "Ilazasoa Martial"),
-    LecteurModel(5, "ANDIAHERTSE", "Fiderana Martial"),
-    LecteurModel(6, "Ousmane", "Dembele"),
-    LecteurModel(1, "ANDRIAHERTSE", "Ianjy Martial"),
-    LecteurModel(2, "RAKOTOARISOA", "Elisabeth Angeline"),
-    LecteurModel(3, "RANDRIAHERTSE", "Martial"),
-    LecteurModel(4, "ANDRIHERTSE", "Ilazasoa Martial"),
-    LecteurModel(5, "ANDIAHERTSE", "Fiderana Martial"),
-    LecteurModel(6, "Ousmane", "Dembele"),
-  ];
-
-  List<LecteurModel> displayList = List.from(listLecteur);
+  // static List<LecteurModel> listLecteur = [
+  //   LecteurModel(1, "ANDRIAHERTSE", "Ianjy Martial"),
+  //   LecteurModel(2, "RAKOTOARISOA", "Elisabeth Angeline"),
+  //   LecteurModel(3, "RANDRIAHERTSE", "Martial"),
+  //   LecteurModel(4, "ANDRIHERTSE", "Ilazasoa Martial"),
+  //   LecteurModel(5, "ANDIAHERTSE", "Fiderana Martial"),
+  //   LecteurModel(6, "Ousmane", "Dembele"),
+  //   LecteurModel(1, "ANDRIAHERTSE", "Ianjy Martial"),
+  //   LecteurModel(2, "RAKOTOARISOA", "Elisabeth Angeline"),
+  //   LecteurModel(3, "RANDRIAHERTSE", "Martial"),
+  //   LecteurModel(4, "ANDRIHERTSE", "Ilazasoa Martial"),
+  //   LecteurModel(5, "ANDIAHERTSE", "Fiderana Martial"),
+  //   LecteurModel(6, "Ousmane", "Dembele"),
+  // ];
 
   late TextEditingController nomInputController;
   late TextEditingController prenomInputController;
 
+  Future<List<LecteurModel>>? _future;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    _future = getLecteurs();
     nomInputController = TextEditingController();
     prenomInputController = TextEditingController();
   }
+
+  // List<LecteurModel> displayList = List.from(listLecteur);
 
   @override
   Widget build(BuildContext context) {
@@ -62,27 +67,54 @@ class _LecteurState extends State<Lecteur> {
           //----------------------------Recherche
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              autofocus: false,
-              decoration: ReusableWidgets.getSearchTextFieldDecoration(),
-              onChanged: (value) {
-                //print(value);
-                _updateList(value);
+            child: InkWell(
+              onTap: () {
+                print("Search tapped");
+                showSearch(context: context, delegate: LecteurSearch());
               },
+              child: TextField(
+                // autofocus: false,
+                enabled: false,
+
+                decoration: ReusableWidgets.getSearchTextFieldDecoration(),
+                // onChanged: (value) {
+                //   print(value);
+                //   // _updateList(value);
+                // },
+              ),
             ),
           ),
           //-------------------------Fin Recherche
 
           //-----------------------Liste Lecteur
           Expanded(
-            child: displayList.length == 0
-                ? Center(child: Text("Aucune Résultat :( "))
-                : ListView.builder(
-                    itemCount: displayList.length,
-                    itemBuilder: (context, index) {
-                      return LecteurCard(
-                          listLecteur: displayList, index: index);
-                    }),
+            // child: Text('eo alohaaa'),
+
+            // child: displayList.length == 0
+            //     ? Center(child: Text("Aucune Résultat :( "))
+            //     : ListView.builder(
+            //         itemCount: displayList.length,
+            //         itemBuilder: (context, index) {
+            //           return LecteurCard(
+            //               listLecteur: displayList, index: index);
+            //         }),
+
+            child: FutureBuilder(
+              future: _future,
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  var lecteurs = snapshot.data;
+                  return ListView.builder(
+                      itemCount: lecteurs.length,
+                      itemBuilder: (context, index) {
+                        // print(lecteurs);
+                        return LecteurCard(listLecteur: lecteurs, index: index);
+                      });
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
+            ),
           )
           //----------------------- FinListe Lecteur
         ],
@@ -142,13 +174,13 @@ class _LecteurState extends State<Lecteur> {
             ));
   }
 
-  _updateList(String value) {
-    setState(() {
-      displayList = listLecteur
-          .where((element) => (element.nomLecteur + element.prenomLecteur)
-              .toLowerCase()
-              .contains(value.toLowerCase()))
-          .toList();
-    });
-  }
+  // _updateList(String value) {
+  //   setState(() {
+  //     displayList = listLecteur
+  //         .where((element) => (element.nomLecteur + element.prenomLecteur)
+  //             .toLowerCase()
+  //             .contains(value.toLowerCase()))
+  //         .toList();
+  //   });
+  // }
 }

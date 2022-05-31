@@ -27,7 +27,7 @@ class LecteurCard extends StatelessWidget {
         title:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Column(
-            // mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(listLecteur[index].nomLecteur.toUpperCase()),
               Text(listLecteur[index].prenomLecteur),
