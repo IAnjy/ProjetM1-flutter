@@ -34,19 +34,21 @@ class LecteurSearch extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    Future<List<LecteurModel>> _future = getLecteurs();
+    Future<List<LecteurModel>> _future = getLecteurs(query: query);
 
     return FutureBuilder(
       future: _future,
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
           var lecteurs = snapshot.data;
-          return ListView.builder(
-              itemCount: lecteurs.length,
-              itemBuilder: (context, index) {
-                // print(lecteurs);
-                return LecteurCard(listLecteur: lecteurs, index: index);
-              });
+          return lecteurs.length == 0
+              ? Center(child: Text("Aucune Résultat :( "))
+              : ListView.builder(
+                  itemCount: lecteurs.length,
+                  itemBuilder: (context, index) {
+                    // print(lecteurs);
+                    return LecteurCard(listLecteur: lecteurs, index: index);
+                  });
         } else {
           return Center(child: CircularProgressIndicator());
         }

@@ -19,21 +19,7 @@ class Lecteur extends StatefulWidget {
 }
 
 class _LecteurState extends State<Lecteur> {
-  // static List<LecteurModel> listLecteur = [
-  //   LecteurModel(1, "ANDRIAHERTSE", "Ianjy Martial"),
-  //   LecteurModel(2, "RAKOTOARISOA", "Elisabeth Angeline"),
-  //   LecteurModel(3, "RANDRIAHERTSE", "Martial"),
-  //   LecteurModel(4, "ANDRIHERTSE", "Ilazasoa Martial"),
-  //   LecteurModel(5, "ANDIAHERTSE", "Fiderana Martial"),
-  //   LecteurModel(6, "Ousmane", "Dembele"),
-  //   LecteurModel(1, "ANDRIAHERTSE", "Ianjy Martial"),
-  //   LecteurModel(2, "RAKOTOARISOA", "Elisabeth Angeline"),
-  //   LecteurModel(3, "RANDRIAHERTSE", "Martial"),
-  //   LecteurModel(4, "ANDRIHERTSE", "Ilazasoa Martial"),
-  //   LecteurModel(5, "ANDIAHERTSE", "Fiderana Martial"),
-  //   LecteurModel(6, "Ousmane", "Dembele"),
-  // ];
-
+  LecteurModel? _lecteur;
   late TextEditingController nomInputController;
   late TextEditingController prenomInputController;
 
@@ -46,8 +32,6 @@ class _LecteurState extends State<Lecteur> {
     nomInputController = TextEditingController();
     prenomInputController = TextEditingController();
   }
-
-  // List<LecteurModel> displayList = List.from(listLecteur);
 
   @override
   Widget build(BuildContext context) {
@@ -73,14 +57,8 @@ class _LecteurState extends State<Lecteur> {
                 showSearch(context: context, delegate: LecteurSearch());
               },
               child: TextField(
-                // autofocus: false,
                 enabled: false,
-
                 decoration: ReusableWidgets.getSearchTextFieldDecoration(),
-                // onChanged: (value) {
-                //   print(value);
-                //   // _updateList(value);
-                // },
               ),
             ),
           ),
@@ -88,17 +66,6 @@ class _LecteurState extends State<Lecteur> {
 
           //-----------------------Liste Lecteur
           Expanded(
-            // child: Text('eo alohaaa'),
-
-            // child: displayList.length == 0
-            //     ? Center(child: Text("Aucune Résultat :( "))
-            //     : ListView.builder(
-            //         itemCount: displayList.length,
-            //         itemBuilder: (context, index) {
-            //           return LecteurCard(
-            //               listLecteur: displayList, index: index);
-            //         }),
-
             child: FutureBuilder(
               future: _future,
               builder: (context, AsyncSnapshot snapshot) {
@@ -162,25 +129,29 @@ class _LecteurState extends State<Lecteur> {
                     },
                     child: Text("ANNULER")),
                 TextButton(
-                    onPressed: () {
-                      if (nomInputController.text.isNotEmpty &&
-                          prenomInputController.text.isNotEmpty) {
+                    onPressed: () async {
+                      String nom = nomInputController.text;
+                      String prenom = prenomInputController.text;
+                      if (nom.isNotEmpty && prenom.isNotEmpty) {
                         //--ajout...
                         print("ajout...");
+                        LecteurModel? data = await postLecteurs(nom, prenom)
+                            .then((value) => Navigator.push(context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                  return Lecteur();
+                                })));
+
+                        // setState(() {
+                        //   _lecteur = data;
+                        // });
+
+                        // Navigator.pop(context);
+
                       }
                     },
                     child: Text("AJOUTER"))
               ],
             ));
   }
-
-  // _updateList(String value) {
-  //   setState(() {
-  //     displayList = listLecteur
-  //         .where((element) => (element.nomLecteur + element.prenomLecteur)
-  //             .toLowerCase()
-  //             .contains(value.toLowerCase()))
-  //         .toList();
-  //   });
-  // }
 }
