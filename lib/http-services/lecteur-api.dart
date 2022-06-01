@@ -40,14 +40,29 @@ Future<LecteurModel?> postLecteurs(String nom, String prenom) async {
   var data = {"nomLecteur": nom, "prenomLecteur": prenom};
   var response = await http.post(Uri.parse(url),
       body: jsonEncode(data), headers: _setHeaders());
-  // var data = response.body;
-  // print(nom);
-  // print(response.statusCode);
-
   if (response.statusCode == 201) {
     String responseString = response.body;
     lecteursFromJson(responseString);
   } else {
     return null;
   }
+}
+
+Future<LecteurModel?> editLecteurs(int id, String nom, String prenom) async {
+  String url = "http://localhost:8000/api/lecteurs/" + id.toString();
+  var data = {"nomLecteur": nom, "prenomLecteur": prenom};
+  var response = await http.put(Uri.parse(url),
+      body: jsonEncode(data), headers: _setHeaders());
+
+  if (response.statusCode == 200) {
+    String responseString = response.body;
+    lecteursFromJson(responseString);
+  } else {
+    return null;
+  }
+}
+
+Future<LecteurModel?> deleteLecteurs(int id) async {
+  String url = "http://localhost:8000/api/lecteurs/" + id.toString();
+  final response = await http.delete(Uri.parse(url));
 }

@@ -1,7 +1,10 @@
 // ignore_for_file: must_be_immutable, prefer_const_constructors, prefer_const_constructors_in_immutables
 
+import 'package:biblio/http-services/lecteur-api.dart';
 import 'package:biblio/models/lecteurModel.dart';
 import 'package:flutter/material.dart';
+
+import '../lecteur.dart';
 
 class LecteurCard extends StatelessWidget {
   final int index;
@@ -38,7 +41,7 @@ class LecteurCard extends StatelessWidget {
               //------------------MODIFIER-----------------------
               IconButton(
                   onPressed: () {
-                    _showDialogModifierLecteur(context);
+                    _showDialogModifierLecteur(context, listLecteur[index].numLecteur);
                   },
                   icon: Icon(
                     Icons.edit,
@@ -64,7 +67,7 @@ class LecteurCard extends StatelessWidget {
     );
   }
 
-  _showDialogModifierLecteur(BuildContext context) async {
+  _showDialogModifierLecteur(BuildContext context, int index) async {
     await showDialog(
         context: context,
         builder: (_) => AlertDialog(
@@ -106,11 +109,23 @@ class LecteurCard extends StatelessWidget {
                     },
                     child: Text("ANNULER")),
                 TextButton(
-                    onPressed: () {
-                      if (nomInputController.text.isNotEmpty &&
-                          prenomInputController.text.isNotEmpty) {
+                    onPressed: () async {
+                      String nom = nomInputController.text;
+                      String prenom = prenomInputController.text;
+                      if (nom.isNotEmpty &&
+                         prenom.isNotEmpty) {
                         //--ajout...
                         print("Modifier...");
+                        LecteurModel? data =
+                            await editLecteurs(index,nom, prenom).then((response) {
+                          nomInputController.clear();
+                          prenomInputController.clear();
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (BuildContext context) {
+                            return Lecteur();
+                          }));
+
+                        }).catchError((onError){print(onError)});
                       }
                     },
                     child: Text("MODIFIER"))
@@ -156,9 +171,17 @@ class LecteurCard extends StatelessWidget {
                         },
                         child: Text("ANNULER")),
                     TextButton(
-                        onPressed: () {
-                          print(listLecteur[index].numLecteur);
-                          Navigator.pop(context);
+                        onPressed: () async {
+                          print("suppression...");
+                          LecteurModel? data =
+                            await deleteLecteurs(listLecteur[index].numLecteur).then((response) {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (BuildContext context) {
+                              return Lecteur();
+                            }));
+
+                          }).catchError((onError){print(onError)});
+                          
                         },
                         child: Text("SUPPRIMER",
                             style: TextStyle(

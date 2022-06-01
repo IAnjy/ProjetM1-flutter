@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, deprecated_member_use
 
-import 'dart:convert';
+
 
 // import 'package:biblio/api/my_api.dart';
 import 'package:biblio/http-services/lecteur-api.dart';
@@ -9,7 +9,6 @@ import 'package:biblio/ui/lecteur/components/lecteur_card.dart';
 import 'package:biblio/ui/lecteur/components/lecteur_search.dart';
 import 'package:biblio/ui/shared/widgetsReutilisable.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class Lecteur extends StatefulWidget {
   const Lecteur({Key? key}) : super(key: key);
@@ -19,7 +18,6 @@ class Lecteur extends StatefulWidget {
 }
 
 class _LecteurState extends State<Lecteur> {
-  LecteurModel? _lecteur;
   late TextEditingController nomInputController;
   late TextEditingController prenomInputController;
 
@@ -66,21 +64,27 @@ class _LecteurState extends State<Lecteur> {
 
           //-----------------------Liste Lecteur
           Expanded(
-            child: FutureBuilder(
-              future: _future,
-              builder: (context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
-                  var lecteurs = snapshot.data;
-                  return ListView.builder(
-                      itemCount: lecteurs.length,
-                      itemBuilder: (context, index) {
-                        // print(lecteurs);
-                        return LecteurCard(listLecteur: lecteurs, index: index);
-                      });
-                } else {
-                  return Center(child: CircularProgressIndicator());
-                }
-              },
+            child: RefreshIndicator(
+              onRefresh: () =>  Navigator.push(context,
+                    MaterialPageRoute(builder: (BuildContext context) {
+                  return Lecteur();
+                })),
+              child: FutureBuilder(
+                future: _future,
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    var lecteurs = snapshot.data;
+                    return ListView.builder(
+                        itemCount: lecteurs.length,
+                        itemBuilder: (context, index) {
+                          // print(lecteurs);
+                          return LecteurCard(listLecteur: lecteurs, index: index);
+                        });
+                  } else {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                },
+              ),
             ),
           )
           //----------------------- FinListe Lecteur
@@ -134,23 +138,21 @@ class _LecteurState extends State<Lecteur> {
                       String prenom = prenomInputController.text;
                       if (nom.isNotEmpty && prenom.isNotEmpty) {
                         //--ajout...
-                        print("ajout...");
-                        LecteurModel? data = await postLecteurs(nom, prenom)
-                            .then((value) => Navigator.push(context,
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) {
-                                  return Lecteur();
-                                })));
+                        print("ajout lecteur...");
+                        LecteurModel? data =
+                            await postLecteurs(nom, prenom).then((response) {
+                          nomInputController.clear();
+                          prenomInputController.clear();
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (BuildContext context) {
+                            return Lecteur();
+                          }));
 
-                        // setState(() {
-                        //   _lecteur = data;
-                        // });
-
-                        // Navigator.pop(context);
+                        }).catchError((onError){print(onError)});
 
                       }
                     },
-                    child: Text("AJOUTER"))
+                    child: Text("AJOUTER")),
               ],
             ));
   }
