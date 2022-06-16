@@ -65,7 +65,7 @@ class _HomeState extends State<Home> {
     return InkWell(
       onTap: () {
         Navigator.push(context,
-            MaterialPageRoute(builder: (BuildContext context) {
+            MaterialPageRoute(builder: (BuildContext newContext) {
           return target;
         }));
       },

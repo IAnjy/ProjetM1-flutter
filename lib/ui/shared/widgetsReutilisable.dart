@@ -70,3 +70,51 @@ class ReusableWidgets {
         contentPadding: EdgeInsets.all(8));
   }
 }
+
+class ComfirmDialog extends StatelessWidget {
+  final Future<void> Function() deleteIt;
+  const ComfirmDialog({Key? key, required this.deleteIt}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SimpleDialog(
+      //Center(child: CircularProgressIndicator()),
+
+      title: Text(
+        "CONFIRMATION",
+        style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+        textAlign: TextAlign.center,
+      ),
+      contentPadding: EdgeInsets.all(20),
+
+      // ignore: prefer_const_literals_to_create_immutables
+      children: [
+        Image.asset(
+          "assets/pirateT.png",
+          width: 80,
+          height: 80,
+          alignment: Alignment.center,
+        ),
+        Container(height: 25.0),
+        Text("Voulez-vous vraiment supprimez ?", textAlign: TextAlign.center),
+        Text("*Cette action est irréversible !!!", textAlign: TextAlign.center),
+        Container(height: 25.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text("ANNULER")),
+            TextButton(
+                onPressed: () => deleteIt(),
+                child: Text("SUPPRIMER",
+                    style: TextStyle(
+                        color: Colors.red, fontWeight: FontWeight.bold))),
+          ],
+        )
+      ],
+    );
+  }
+}

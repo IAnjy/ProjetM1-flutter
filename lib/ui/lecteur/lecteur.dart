@@ -1,8 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, deprecated_member_use
 
-
-
-// import 'package:biblio/api/my_api.dart';
 import 'package:biblio/http-services/lecteur-api.dart';
 import 'package:biblio/models/lecteurModel.dart';
 import 'package:biblio/ui/lecteur/components/lecteur_card.dart';
@@ -49,15 +46,13 @@ class _LecteurState extends State<Lecteur> {
           //----------------------------Recherche
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: InkWell(
+            child: TextField(
+              readOnly: true,
               onTap: () {
                 print("Search tapped");
                 showSearch(context: context, delegate: LecteurSearch());
               },
-              child: TextField(
-                enabled: false,
-                decoration: ReusableWidgets.getSearchTextFieldDecoration(),
-              ),
+              decoration: ReusableWidgets.getSearchTextFieldDecoration(),
             ),
           ),
           //-------------------------Fin Recherche
@@ -65,10 +60,10 @@ class _LecteurState extends State<Lecteur> {
           //-----------------------Liste Lecteur
           Expanded(
             child: RefreshIndicator(
-              onRefresh: () =>  Navigator.push(context,
-                    MaterialPageRoute(builder: (BuildContext context) {
-                  return Lecteur();
-                })),
+              onRefresh: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (BuildContext context) {
+                return Lecteur();
+              })),
               child: FutureBuilder(
                 future: _future,
                 builder: (context, AsyncSnapshot snapshot) {
@@ -78,7 +73,8 @@ class _LecteurState extends State<Lecteur> {
                         itemCount: lecteurs.length,
                         itemBuilder: (context, index) {
                           // print(lecteurs);
-                          return LecteurCard(listLecteur: lecteurs, index: index);
+                          return LecteurCard(
+                              listLecteur: lecteurs, index: index);
                         });
                   } else {
                     return Center(child: CircularProgressIndicator());
@@ -143,13 +139,13 @@ class _LecteurState extends State<Lecteur> {
                             await postLecteurs(nom, prenom).then((response) {
                           nomInputController.clear();
                           prenomInputController.clear();
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (BuildContext context) {
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (BuildContext context) {
                             return Lecteur();
                           }));
-
-                        }).catchError((onError){print(onError)});
-
+                        }).catchError((onError) {
+                          print(onError);
+                        });
                       }
                     },
                     child: Text("AJOUTER")),

@@ -1,8 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:biblio/http-services/livre_api.dart';
 import 'package:biblio/models/livreModel.dart';
+import 'package:biblio/ui/livre/livre.dart';
+import 'package:biblio/ui/livre/livre_modifier.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import '../../shared/widgetsReutilisable.dart';
 
 class LivreCard extends StatelessWidget {
   final int index;
@@ -13,7 +18,6 @@ class LivreCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return Text(listLivre[index].design);
     var dateFormatted =
         DateFormat('dd MMMM yyyy').format(listLivre[index].dateEdition);
 
@@ -67,7 +71,7 @@ class LivreCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                          // listLivre[index].dateEdition.toString(),
+                          // "Edition: " + listLivre[index].dateEdition.toString(),
                           "Edition: " + dateFormatted.toString()),
                     ],
                   ),
@@ -78,13 +82,37 @@ class LivreCard extends StatelessWidget {
                       width: 40,
                     ),
                     IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          //------------------modifier
+                          var model = LivreModel(
+                              numLivre: listLivre[index].numLivre,
+                              design: listLivre[index].design,
+                              auteur: listLivre[index].auteur,
+                              dateEdition: listLivre[index].dateEdition,
+                              disponible: "");
+
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (
+                                BuildContext context,
+                              ) =>
+                                      ModifLivre(
+                                        unLivre: model,
+                                      )));
+                        },
                         icon: Icon(
                           Icons.edit,
                           size: 20,
                         )),
                     IconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          await showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (_) => ComfirmDialog(
+                                  deleteIt: () async => supprLivre(context)));
+                        },
                         icon: Icon(
                           Icons.delete,
                           size: 20,
@@ -97,5 +125,17 @@ class LivreCard extends StatelessWidget {
         )
       ],
     );
+  }
+
+  supprLivre(BuildContext context) async {
+    print("suppression...");
+    await deleteLivre(listLivre[index].numLivre).then((response) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (BuildContext context) {
+        return Livre();
+      }));
+    }).catchError((onError) {
+      print(onError);
+    });
   }
 }
