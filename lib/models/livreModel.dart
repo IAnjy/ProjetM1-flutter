@@ -1,8 +1,6 @@
 // ignore_for_file: file_names
 import 'dart:convert';
 
-import 'package:intl/intl.dart';
-
 LivreModel livresFromJson(String str) => LivreModel.fromJson(json.decode(str));
 
 String livresToJson(LivreModel data) => json.encode(data.toJson());

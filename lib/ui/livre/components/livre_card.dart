@@ -7,7 +7,7 @@ import 'package:biblio/ui/livre/livre_modifier.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../shared/widgetsReutilisable.dart';
+import '../../shared/utils.dart';
 
 class LivreCard extends StatelessWidget {
   final int index;
@@ -23,7 +23,7 @@ class LivreCard extends StatelessWidget {
 
     return Column(
       children: [
-        Container(
+        SizedBox(
           height: 171,
           child: Card(
             elevation: 3,
@@ -35,12 +35,7 @@ class LivreCard extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0, right: 8.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: listLivre[index].disponible == "OUI"
-                                ? Colors.teal
-                                : Colors.red,
-                            borderRadius: BorderRadius.circular(2)),
+                      child: SizedBox(
                         child: Padding(
                           padding: const EdgeInsets.all(3.1),
                           child: Text(

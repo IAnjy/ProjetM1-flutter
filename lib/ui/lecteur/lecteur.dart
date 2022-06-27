@@ -4,7 +4,7 @@ import 'package:biblio/http-services/lecteur-api.dart';
 import 'package:biblio/models/lecteurModel.dart';
 import 'package:biblio/ui/lecteur/components/lecteur_card.dart';
 import 'package:biblio/ui/lecteur/components/lecteur_search.dart';
-import 'package:biblio/ui/shared/widgetsReutilisable.dart';
+import 'package:biblio/ui/shared/utils.dart';
 import 'package:flutter/material.dart';
 
 class Lecteur extends StatefulWidget {
@@ -76,6 +76,8 @@ class _LecteurState extends State<Lecteur> {
                           return LecteurCard(
                               listLecteur: lecteurs, index: index);
                         });
+                  } else if (snapshot.hasError) {
+                    return Text(snapshot.error.toString());
                   } else {
                     return Center(child: CircularProgressIndicator());
                   }
@@ -135,8 +137,7 @@ class _LecteurState extends State<Lecteur> {
                       if (nom.isNotEmpty && prenom.isNotEmpty) {
                         //--ajout...
                         print("ajout lecteur...");
-                        LecteurModel? data =
-                            await postLecteurs(nom, prenom).then((response) {
+                        await postLecteurs(nom, prenom).then((response) {
                           nomInputController.clear();
                           prenomInputController.clear();
                           Navigator.push(context, MaterialPageRoute(

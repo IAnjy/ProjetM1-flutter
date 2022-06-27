@@ -2,7 +2,7 @@
 
 import 'package:biblio/http-services/lecteur-api.dart';
 import 'package:biblio/models/lecteurModel.dart';
-import 'package:biblio/ui/shared/widgetsReutilisable.dart';
+import 'package:biblio/ui/shared/utils.dart';
 import 'package:flutter/material.dart';
 
 import '../lecteur.dart';
@@ -121,9 +121,7 @@ class LecteurCard extends StatelessWidget {
                       if (nom.isNotEmpty && prenom.isNotEmpty) {
                         //--ajout...
                         print("Modifier...");
-                        LecteurModel? data =
-                            await editLecteurs(index, nom, prenom)
-                                .then((response) {
+                        await editLecteurs(index, nom, prenom).then((response) {
                           nomInputController.clear();
                           prenomInputController.clear();
                           Navigator.push(context, MaterialPageRoute(
@@ -142,8 +140,7 @@ class LecteurCard extends StatelessWidget {
 
   supprLecteur(BuildContext context) async {
     print("suppression...");
-    LecteurModel? data =
-        await deleteLecteurs(listLecteur[index].numLecteur).then((response) {
+    await deleteLecteurs(listLecteur[index].numLecteur).then((response) {
       Navigator.push(context,
           MaterialPageRoute(builder: (BuildContext context) {
         return Lecteur();

@@ -118,3 +118,88 @@ class ComfirmDialog extends StatelessWidget {
     );
   }
 }
+
+//-------------Pret Rendu
+class ComfirmRenduPretDialog extends StatelessWidget {
+  final Future<void> Function() deleteIt;
+  final Future<void> Function() cancelIt;
+  const ComfirmRenduPretDialog(
+      {Key? key, required this.deleteIt, required this.cancelIt})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SimpleDialog(
+      //Center(child: CircularProgressIndicator()),
+
+      title: Text(
+        "CONFIRMATION",
+        style: TextStyle(color: Color(0xFFAE8559), fontWeight: FontWeight.bold),
+        textAlign: TextAlign.center,
+      ),
+      contentPadding: EdgeInsets.all(20),
+
+      // ignore: prefer_const_literals_to_create_immutables
+      children: [
+        Container(height: 12.0),
+        Text("Voulez-vous vraiment rendre le LIVRE ?",
+            textAlign: TextAlign.center),
+        Container(height: 25.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextButton(onPressed: () => cancelIt(), child: Text("NON")),
+            TextButton(
+              onPressed: () => deleteIt(),
+              child: Text(
+                "OUI",
+                style: TextStyle(
+                  color: Color(0xFFAE8559),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        )
+      ],
+    );
+  }
+}
+
+class LivreNonRenduDialog extends StatelessWidget {
+  const LivreNonRenduDialog({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SimpleDialog(
+      //Center(child: CircularProgressIndicator()),
+
+      title: Text(
+        "INFORMATION",
+        style: TextStyle(color: Colors.yellow, fontWeight: FontWeight.bold),
+        textAlign: TextAlign.center,
+      ),
+      contentPadding: EdgeInsets.all(20),
+
+      // ignore: prefer_const_literals_to_create_immutables
+      children: [
+        Container(height: 20.0),
+        Text("Impossible de Supprimez !!", textAlign: TextAlign.center),
+        Text("Livre non-rendu !!", textAlign: TextAlign.center),
+        Container(height: 20.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text("RETOUR")),
+          ],
+        )
+      ],
+    );
+  }
+}

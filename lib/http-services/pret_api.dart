@@ -1,54 +1,55 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 
-import 'package:biblio/models/livreModel.dart';
+import 'package:biblio/models/PretModel.dart';
+
+import 'package:http/http.dart' as http;
 
 _setHeaders() =>
     {'Content-type': 'application/json', 'Accept': 'application/json'};
 
-Future<List<LivreModel>> getLivres({String? query}) async {
-  String url = "http://localhost:8000/api/livres";
-  List<LivreModel> resultat = [];
+Future<List<PretModel>> getPrets({String? query}) async {
+  String url = "http://localhost:8000/api/prets";
+  List<PretModel> resultat = [];
+
   try {
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
       var result = json.decode(response.body);
+      // print(result);
       resultat = List.generate(result['hydra:member'].length, (i) {
-        return LivreModel.fromJson(result['hydra:member'][i]);
+        return PretModel.fromJson(result['hydra:member'][i]);
       });
 
       if (query != null) {
         switch (query) {
-          case "disponible":
+          case "rendu":
             String condition = "oui";
             resultat = resultat
-                .where((element) => (element.disponible)
+                .where((element) => (element.rendu)
                     .toLowerCase()
                     .contains(condition.toLowerCase()))
                 .toList();
             break;
-          case "non-disponible":
+          case "non-rendu":
             String condition = "non";
             resultat = resultat
-                .where((element) => (element.disponible)
+                .where((element) => (element.rendu)
                     .toLowerCase()
                     .contains(condition.toLowerCase()))
                 .toList();
             break;
           default:
             resultat = resultat
-                .where((element) => (element.numLivre.toString() +
-                        element.design +
-                        element.auteur)
+                .where((element) => (element.numPret.toString() +
+                        element.lecteur +
+                        element.livre)
                     .toLowerCase()
                     .contains(query.toLowerCase()))
                 .toList();
         }
       }
     } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
       throw Exception('Failed to load Livres');
     }
   } catch (e) {
@@ -57,43 +58,24 @@ Future<List<LivreModel>> getLivres({String? query}) async {
   return resultat;
 }
 
-Future<void> postLivres(
-    String titre, String auteur, DateTime dateEdition) async {
-  String url = "http://localhost:8000/api/livres";
-  var data = {
-    "design": titre,
-    "auteur": auteur,
-    "dateEdition": dateEdition.toString(),
-    "disponible": "OUI"
-  };
+Future<void> deletePret(int id) async {
+  String url = "http://localhost:8000/api/prets/" + id.toString();
   try {
-    var response = await http.post(Uri.parse(url),
-        body: jsonEncode(data), headers: _setHeaders());
-    if (response.statusCode == 201) {
-      String responseString = response.body;
-      livresFromJson(responseString);
-    } else {
-      return;
-    }
+    await http.delete(Uri.parse(url));
   } catch (e) {
     throw "impossible de contacter le server ! Vérifier la connexion!";
   }
 }
 
-Future<void> modifLivres(
-    int id, String titre, String auteur, DateTime dateEdition) async {
-  String url = "http://localhost:8000/api/livres/" + id.toString();
-  var data = {
-    "design": titre,
-    "auteur": auteur,
-    "dateEdition": dateEdition.toString()
-  };
+Future<void> putRenduPret(int id) async {
+  String url = "http://localhost:8000/api/prets/" + id.toString();
+  var data = {"rendu": "OUI"};
   try {
     var response = await http.put(Uri.parse(url),
         body: jsonEncode(data), headers: _setHeaders());
     if (response.statusCode == 200) {
       String responseString = response.body;
-      livresFromJson(responseString);
+      pretsFromJson(responseString);
     } else {
       return;
     }
@@ -102,10 +84,22 @@ Future<void> modifLivres(
   }
 }
 
-Future<void> deleteLivre(int id) async {
-  String url = "http://localhost:8000/api/livres/" + id.toString();
+Future<void> postPrets(dynamic lecteurValue, dynamic livreValue) async {
+  String url = "http://localhost:8000/api/prets";
+  var data = {
+    "lecteur": "/api/lecteurs/" + lecteurValue.toString(),
+    "livre": "/api/livres/" + livreValue.toString()
+  };
+
   try {
-    await http.delete(Uri.parse(url));
+    var response = await http.post(Uri.parse(url),
+        body: jsonEncode(data), headers: _setHeaders());
+    if (response.statusCode == 201) {
+      String responseString = response.body;
+      pretsFromJson(responseString);
+    } else {
+      return;
+    }
   } catch (e) {
     throw "impossible de contacter le server ! Vérifier la connexion!";
   }

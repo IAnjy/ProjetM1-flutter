@@ -3,7 +3,7 @@
 import 'package:biblio/models/livreModel.dart';
 import 'package:biblio/ui/livre/components/livre_search.dart';
 import 'package:biblio/ui/livre/livre_ajout.dart';
-import 'package:biblio/ui/shared/widgetsReutilisable.dart';
+import 'package:biblio/ui/shared/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:biblio/http-services/livre_api.dart';
 
