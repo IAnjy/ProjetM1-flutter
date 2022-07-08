@@ -41,7 +41,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(140.0),
+        preferredSize: Size.fromHeight(100.0),
         child: ClipRRect(
           clipBehavior: Clip.antiAlias,
           borderRadius: BorderRadius.only(
@@ -50,7 +50,7 @@ class _HomeState extends State<Home> {
           ),
           child: AppBar(
             leading: null,
-            toolbarHeight: 140,
+            toolbarHeight: 100,
             backgroundColor: Color(0xFFAE8559),
             centerTitle: true,
             elevation: 0,
@@ -100,45 +100,42 @@ class _HomeState extends State<Home> {
                         _getCard("assets/pret.png", "PRETS", Pret()),
                       ],
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: Container(
-                        width: double.infinity,
-                        height: 400,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30)),
-                        child: Card(
-                          elevation: 1,
-                          color: Colors.white,
-                          child: SfCircularChart(
-                            title: ChartTitle(
-                                text: "Un aperçu de la situation des livres"),
-                            legend: Legend(
-                              position: LegendPosition.bottom,
-                              isVisible: true,
-                              overflowMode: LegendItemOverflowMode.wrap,
-                            ),
-                            series: <CircularSeries>[
-                              PieSeries<GDPData, String>(
-                                dataSource: _chartData,
-                                xValueMapper: (GDPData data, _) =>
-                                    data.continent,
-                                yValueMapper: (GDPData data, _) => data.gdp,
-                                dataLabelSettings:
-                                    DataLabelSettings(isVisible: true),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    )
                   ],
                 )
               ],
             ),
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: Card(
+                elevation: 1,
+                color: Colors.white,
+                child: SfCircularChart(
+                  title:
+                      ChartTitle(text: "Un aperçu de la situation des livres"),
+                  legend: Legend(
+                    position: LegendPosition.bottom,
+                    isVisible: true,
+                    overflowMode: LegendItemOverflowMode.wrap,
+                  ),
+                  series: <CircularSeries>[
+                    PieSeries<GDPData, String>(
+                      dataSource: _chartData,
+                      xValueMapper: (GDPData data, _) => data.continent,
+                      yValueMapper: (GDPData data, _) => data.gdp,
+                      dataLabelSettings: DataLabelSettings(isVisible: true),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 20,
           ),
         ],
       ),
@@ -147,12 +144,12 @@ class _HomeState extends State<Home> {
 
   List<GDPData> getChartData() {
     final List<GDPData> chartData = [
-      GDPData("Ocenia", 1600),
-      GDPData("Africa", 24000),
-      GDPData("America", 2566),
-      GDPData("Europe", 34600),
-      GDPData("Asia", 2577),
-      GDPData("Madagascar", 34889),
+      GDPData("Dispobible", 16),
+      GDPData("Non-disponible", 24),
+      GDPData("En pret", 34),
+      GDPData("Jamais preter", 9),
+      // GDPData("Asia", 7),
+      // GDPData("Madagascar", 34),
     ];
     return chartData;
   }

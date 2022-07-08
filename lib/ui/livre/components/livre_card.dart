@@ -33,18 +33,21 @@ class LivreCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   // ignore: prefer_const_literals_to_create_immutables
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0, right: 8.0),
-                      child: SizedBox(
-                        child: Padding(
-                          padding: const EdgeInsets.all(3.1),
-                          child: Text(
-                            listLivre[index].disponible == "OUI"
-                                ? "DISPONIBLE"
-                                : "NON-DISPONIBLE",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
+                    Container(
+                      color: Colors.red,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8.0, right: 8.0),
+                        child: SizedBox(
+                          child: Padding(
+                            padding: const EdgeInsets.all(3.1),
+                            child: Text(
+                              listLivre[index].disponible == "OUI"
+                                  ? "DISPONIBLE"
+                                  : "NON-DISPONIBLE",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ),
                       ),
