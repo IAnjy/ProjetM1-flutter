@@ -2,6 +2,7 @@
 
 import 'package:biblio/http-services/lecteur-api.dart';
 import 'package:biblio/models/lecteurModel.dart';
+import 'package:biblio/ui/shared/utils.dart';
 import 'package:flutter/material.dart';
 
 import '../lecteur.dart';
@@ -41,7 +42,8 @@ class LecteurCard extends StatelessWidget {
               //------------------MODIFIER-----------------------
               IconButton(
                   onPressed: () {
-                    _showDialogModifierLecteur(context, listLecteur[index].numLecteur);
+                    _showDialogModifierLecteur(
+                        context, listLecteur[index].numLecteur);
                   },
                   icon: Icon(
                     Icons.edit,
@@ -52,8 +54,12 @@ class LecteurCard extends StatelessWidget {
 
               //------------------SUPPRIMER-----------------------
               IconButton(
-                  onPressed: () {
-                    _showComfirmDialog(context);
+                  onPressed: () async {
+                    await showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (_) => ComfirmDialog(
+                            deleteIt: () async => supprLecteur(context)));
                   },
                   icon: Icon(
                     Icons.delete,
@@ -112,20 +118,19 @@ class LecteurCard extends StatelessWidget {
                     onPressed: () async {
                       String nom = nomInputController.text;
                       String prenom = prenomInputController.text;
-                      if (nom.isNotEmpty &&
-                         prenom.isNotEmpty) {
+                      if (nom.isNotEmpty && prenom.isNotEmpty) {
                         //--ajout...
                         print("Modifier...");
-                        LecteurModel? data =
-                            await editLecteurs(index,nom, prenom).then((response) {
+                        await editLecteurs(index, nom, prenom).then((response) {
                           nomInputController.clear();
                           prenomInputController.clear();
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (BuildContext context) {
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (BuildContext context) {
                             return Lecteur();
                           }));
-
-                        }).catchError((onError){print(onError)});
+                        }).catchError((onError) {
+                          print(onError);
+                        });
                       }
                     },
                     child: Text("MODIFIER"))
@@ -133,63 +138,15 @@ class LecteurCard extends StatelessWidget {
             ));
   }
 
-  _showComfirmDialog(BuildContext context) async {
-    await showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (_) => SimpleDialog(
-              //Center(child: CircularProgressIndicator()),
-
-              title: Text(
-                "CONFIRMATION",
-                style:
-                    TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-              contentPadding: EdgeInsets.all(20),
-
-              // ignore: prefer_const_literals_to_create_immutables
-              children: [
-                Image.asset(
-                  "assets/pirateT.png",
-                  width: 80,
-                  height: 80,
-                  alignment: Alignment.center,
-                ),
-                Container(height: 25.0),
-                Text("Voulez-vous vraiment supprimez ?",
-                    textAlign: TextAlign.center),
-                Text("*Cette action est irréversible !!!",
-                    textAlign: TextAlign.center),
-                Container(height: 25.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text("ANNULER")),
-                    TextButton(
-                        onPressed: () async {
-                          print("suppression...");
-                          LecteurModel? data =
-                            await deleteLecteurs(listLecteur[index].numLecteur).then((response) {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (BuildContext context) {
-                              return Lecteur();
-                            }));
-
-                          }).catchError((onError){print(onError)});
-                          
-                        },
-                        child: Text("SUPPRIMER",
-                            style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold))),
-                  ],
-                )
-              ],
-            ));
+  supprLecteur(BuildContext context) async {
+    print("suppression...");
+    await deleteLecteurs(listLecteur[index].numLecteur).then((response) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (BuildContext context) {
+        return Lecteur();
+      }));
+    }).catchError((onError) {
+      print(onError);
+    });
   }
 }
