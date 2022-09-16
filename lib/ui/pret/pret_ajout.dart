@@ -198,7 +198,7 @@ class _AjoutPretState extends State<AjoutPret> {
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 minimumSize: const Size(90, 50)),
-                            child: const Text("PRETER"),
+                            child: const Text("EMPREINTER"),
                             onPressed: () => validate(lecteurValue, livreValue),
                           ),
                         ),

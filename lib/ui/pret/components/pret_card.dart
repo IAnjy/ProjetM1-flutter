@@ -157,7 +157,7 @@ class _PretCardState extends State<PretCard> {
                           width: 12,
                         ),
                         listPret[index].rendu == "NON"
-                            ? const Text("Si vous voulez rendre :")
+                            ? const Text("Rendre :")
                             : const Text("Rendu :"),
                         Switch(
                           value: isRendu,

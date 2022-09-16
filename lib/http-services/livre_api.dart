@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:biblio/utils/global_variable.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:biblio/models/livreModel.dart';
@@ -7,7 +8,7 @@ _setHeaders() =>
     {'Content-type': 'application/json', 'Accept': 'application/json'};
 
 Future<List<LivreModel>> getLivres({String? query}) async {
-  String url = "http://localhost:8000/api/livres";
+  String url = urlConnection + "livres";
   List<LivreModel> resultat = [];
   try {
     final response = await http.get(Uri.parse(url));
@@ -59,7 +60,7 @@ Future<List<LivreModel>> getLivres({String? query}) async {
 
 Future<void> postLivres(
     String titre, String auteur, DateTime dateEdition) async {
-  String url = "http://localhost:8000/api/livres";
+  String url = urlConnection + "livres";
   var data = {
     "design": titre,
     "auteur": auteur,
@@ -82,7 +83,7 @@ Future<void> postLivres(
 
 Future<void> modifLivres(
     int id, String titre, String auteur, DateTime dateEdition) async {
-  String url = "http://localhost:8000/api/livres/" + id.toString();
+  String url = urlConnection + "livres/" + id.toString();
   var data = {
     "design": titre,
     "auteur": auteur,
@@ -103,7 +104,7 @@ Future<void> modifLivres(
 }
 
 Future<void> deleteLivre(int id) async {
-  String url = "http://localhost:8000/api/livres/" + id.toString();
+  String url = urlConnection + "livres/" + id.toString();
   try {
     await http.delete(Uri.parse(url));
   } catch (e) {

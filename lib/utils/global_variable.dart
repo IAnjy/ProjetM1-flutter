@@ -1,0 +1,1 @@
+const String urlConnection = "http://localhost:8000/api/";

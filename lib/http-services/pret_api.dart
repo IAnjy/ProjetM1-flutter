@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:biblio/models/PretModel.dart';
+import 'package:biblio/utils/global_variable.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -8,7 +9,7 @@ _setHeaders() =>
     {'Content-type': 'application/json', 'Accept': 'application/json'};
 
 Future<List<PretModel>> getPrets({String? query}) async {
-  String url = "http://localhost:8000/api/prets";
+  String url = urlConnection + "prets";
   List<PretModel> resultat = [];
 
   try {
@@ -59,7 +60,7 @@ Future<List<PretModel>> getPrets({String? query}) async {
 }
 
 Future<void> deletePret(int id) async {
-  String url = "http://localhost:8000/api/prets/" + id.toString();
+  String url = urlConnection + "prets/" + id.toString();
   try {
     await http.delete(Uri.parse(url));
   } catch (e) {
@@ -68,7 +69,7 @@ Future<void> deletePret(int id) async {
 }
 
 Future<void> putRenduPret(int id) async {
-  String url = "http://localhost:8000/api/prets/" + id.toString();
+  String url = urlConnection + "prets/" + id.toString();
   var data = {"rendu": "OUI"};
   try {
     var response = await http.put(Uri.parse(url),
@@ -85,7 +86,7 @@ Future<void> putRenduPret(int id) async {
 }
 
 Future<void> postPrets(dynamic lecteurValue, dynamic livreValue) async {
-  String url = "http://localhost:8000/api/prets";
+  String url = urlConnection + "prets";
   var data = {
     "lecteur": "/api/lecteurs/" + lecteurValue.toString(),
     "livre": "/api/livres/" + livreValue.toString()

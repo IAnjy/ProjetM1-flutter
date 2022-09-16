@@ -116,7 +116,7 @@ class _HomeState extends State<Home> {
                 color: Colors.white,
                 child: SfCircularChart(
                   title:
-                      ChartTitle(text: "Un aperçu de la situation des livres"),
+                      ChartTitle(text: "Aperçu de la situation des livres"),
                   legend: Legend(
                     position: LegendPosition.bottom,
                     isVisible: true,
